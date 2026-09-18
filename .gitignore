@@ -1,0 +1,11 @@
+# Dev-only build tooling and large regenerable artifacts.
+# The training / data-gen / export pipeline lives in the main hyperODE repo.
+build/
+assets/models.json
+assets/reference.js
+assets/reference.json
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.log

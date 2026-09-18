@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HyperODE</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header>
+  <div class="brand">HyperODE</div>
+  <div class="tag">Provide an ODE with uncertain parameters → predicted trajectory quantiles, in one pass.
+    <a href="https://arxiv.org/abs/2608.00852" target="_blank" rel="noopener">Read the paper ↗</a></div>
+</header>
+
+<main>
+  <section class="panel controls">
+    <div class="field">
+      <label>Model</label>
+      <select id="modelSize"></select>
+    </div>
+
+    <div class="grid2">
+      <div class="field">
+        <label>Preset</label>
+        <select id="preset"></select>
+      </div>
+      <div class="field">
+        <label>Scale <em>k</em> <small>(sub-pops)</small></label>
+        <input id="scaleK" type="number" min="1" step="1" value="1"
+               title="Expand a compartmental preset into k ring-coupled sub-populations (meta-population). k=1 = base system.">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>ODE system <small>(one <code>dX/dt = …</code> per line)</small></label>
+      <textarea id="ode" spellcheck="false" rows="6"></textarea>
+      <button id="sync" class="ghost">↻ detect states &amp; parameters</button>
+    </div>
+
+    <details class="llm">
+      <summary>✨ Don't want to write equations? Generate them with an LLM</summary>
+      <p class="hint">Copy this prompt into ChatGPT / Claude / any LLM, describe your system in plain
+        words, then paste what it returns below and press <b>Load spec</b>.</p>
+      <textarea id="llmPrompt" readonly rows="7" spellcheck="false"></textarea>
+      <button id="copyPrompt" class="ghost">⧉ Copy prompt</button>
+      <textarea id="importJson" rows="4" spellcheck="false"
+        placeholder="Paste the JSON the LLM returns here (or raw dX/dt = … equations)…"></textarea>
+      <button id="importBtn" class="ghost">↓ Load spec</button>
+    </details>
+
+    <div class="field">
+      <label>Parameters <small>(central value &amp; distribution)</small></label>
+      <div id="paramTable" class="table"></div>
+    </div>
+
+    <div class="field">
+      <label>Initial conditions</label>
+      <div id="x0Table" class="table"></div>
+    </div>
+
+    <div class="grid2">
+      <div class="field"><label>Horizon t<sub>max</sub></label><input id="tMax" type="number" step="0.5" value="8"></div>
+      <div class="field"><label>Steps</label><input id="steps" type="number" step="1" value="40"></div>
+    </div>
+    <div class="grid2">
+      <div class="field"><label>Param samples <small>(features)</small></label><input id="K" type="number" step="500" value="2000"></div>
+      <div class="field"><label>Seed</label><input id="seed" type="number" step="1" value="12345"></div>
+    </div>
+
+    <button id="run" class="primary">Run inference</button>
+    <div class="grid2" style="margin-top:8px">
+      <button id="mc" class="ghost" style="margin:0">⚖ Compare vs Monte-Carlo</button>
+      <div class="field" style="margin:0"><input id="Kmc" type="number" step="100" value="400" title="Monte-Carlo true-ODE solves"></div>
+    </div>
+    <div id="err" class="error"></div>
+  </section>
+
+  <div class="gutter" id="gutter" title="Drag to resize · double-click to reset"></div>
+
+  <section class="panel results">
+    <div id="stats" class="stats"></div>
+    <div class="legend">
+      <span><i class="band b1"></i><i class="band b2"></i> surrogate bands 5–95% / 25–75%</span>
+      <span><i class="line"></i> surrogate median</span>
+      <span><i class="line mcline"></i> Monte-Carlo (median &amp; 50% interval)</span>
+    </div>
+    <div id="plots" class="plots"></div>
+  </section>
+</main>
+
+<footer>
+  A neural surrogate that turns parameter uncertainty into trajectory bands in a single pass — no step-by-step
+  ODE solving. Everything runs locally in your browser; your equations never leave your device.
+</footer>
+
+<script src="assets/models.js"></script>
+<script src="js/model.js"></script>
+<script src="js/prod.js"></script>
+<script src="js/encode.js"></script>
+<script src="js/mc.js"></script>
+<script src="js/plot.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
