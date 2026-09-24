@@ -281,12 +281,38 @@ MY SYSTEM: `;
       hideError();
       if (!syncTables()) return;                           // shows a parse error if the ODE is malformed
       saveState();
-      run();
+      // Loading a spec only POPULATES the controls -- it does not infer. The user reviews the
+      // parsed equations / parameters / ICs and presses Run inference themselves.
+      markStale("Spec loaded — review the parameters, then press Run inference.");
+      flashBtn("importBtn", "✓ loaded — press Run inference");
     } catch (e) { showError("Import failed: " + e.message); }
   }
 
   function showError(msg) { const e = $("err"); e.textContent = "⚠ " + msg; e.style.display = "block"; }
   function hideError() { $("err").style.display = "none"; }
+
+  // Results no longer match the controls (a spec was loaded but not run yet): dim the plots and
+  // say so, so a stale band is never mistaken for the newly loaded system. Cleared by run().
+  function markStale(msg) {
+    const r = document.querySelector(".results");
+    if (r) r.classList.add("stale");
+    const n = $("staleNote");
+    if (n) { n.textContent = msg; n.style.display = "block"; }
+  }
+  function clearStale() {
+    const r = document.querySelector(".results");
+    if (r) r.classList.remove("stale");
+    const n = $("staleNote");
+    if (n) n.style.display = "none";
+  }
+
+  // transient confirmation on a button, then restore its label
+  function flashBtn(id, text, ms) {
+    const b = $(id); if (!b) return;
+    if (b._flash) { clearTimeout(b._flash); } else { b._label = b.textContent; }
+    b.textContent = text;
+    b._flash = setTimeout(() => { b.textContent = b._label; b._flash = null; }, ms || 2200);
+  }
 
   // ---- draggable sidebar width ----------------------------------------------
   const SIDE_KEY = "axiom.sideW.v1", SIDE_MIN = 260, SIDE_DEFAULT = 340;
@@ -370,6 +396,7 @@ MY SYSTEM: `;
   function run() {
     const info = syncTables();
     if (!info) return;
+    clearStale();
     const { states, rhs } = info;
     const size = $("modelSize").value;
     const cfg = MODELS.models[size];

@@ -67,6 +67,12 @@ button.primary:hover{filter:brightness(1.08)}
   border:1px solid rgba(244,91,105,.35);border-radius:8px;padding:8px 10px;font-size:12.5px}
 
 .results{min-height:400px}
+/* controls changed but inference hasn't re-run: dim the stale band so it is never read as
+   the result for the newly loaded system */
+.results.stale .plots,.results.stale .stats{opacity:.32;filter:saturate(.4)}
+.stale-note{display:none;margin-bottom:10px;color:var(--accent);
+  background:rgba(79,157,255,.08);border:1px solid rgba(79,157,255,.35);
+  border-radius:8px;padding:8px 10px;font-size:13px}
 .stats{color:var(--dim);font-size:13.5px;margin-bottom:8px}
 .stats b{color:var(--ink)}
 .legend{display:flex;gap:20px;color:var(--dim);font-size:13px;margin-bottom:12px;flex-wrap:wrap}
