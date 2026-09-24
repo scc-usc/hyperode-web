@@ -500,7 +500,8 @@ MY SYSTEM: `;
 
   function setStats(mc) {
     const L = LAST;
-    const name = L.size.charAt(0).toUpperCase() + L.size.slice(1);
+    const opt = [...$("modelSize").options].find((o) => o.value === L.size);   // dropdown label
+    const name = opt ? opt.textContent : L.size.charAt(0).toUpperCase() + L.size.slice(1);
     let s = `<b>${name}</b> model · ${L.input.n} states · ${L.steps} steps · <b>${L.ms.toFixed(1)} ms</b>`;
     if (mc) {
       const mid = L.taus.reduce((b, t, i) => Math.abs(t - 0.5) < Math.abs(L.taus[b] - 0.5) ? i : b, 0);
@@ -528,6 +529,7 @@ MY SYSTEM: `;
   function populateModelInfo() {
     const sel = $("modelSize");
     [["small", "Small"], ["medium", "Medium"], ["large", "Large"],
+     ["medium_longt", "Medium: long horizon"],
      ["diverse", "Diverse (broad data)"]].forEach(([k, lbl]) => {
       if (!MODELS.models[k]) return;
       const o = document.createElement("option");

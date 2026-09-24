@@ -43,6 +43,7 @@ Opening `index.html` directly over `file://` also works in most browsers.
 | Small | 16 | 2 | smallest |
 | Medium | 32 | 3 | default |
 | Large | 128 | 3 | largest capacity |
+| Medium: long horizon | 32 | 2 | trained on horizons t = 8–100 (state clamped to ±20); use for t > 8. 90% bands cover ~0.85–0.93 out to t = 96, vs 0.20 for the original h32; slightly narrower bands for t ≤ 8 |
 | Diverse (broad data) | 32 | 3 | typed + signed; handles non-mass-action nonlinearities and negative/unbounded states |
 
 ## Scope & caveats
