@@ -23,7 +23,14 @@ main{display:grid;grid-template-columns:var(--side-w,340px) 14px 1fr;gap:0;paddi
 .gutter:hover::before,.gutter.drag::before{background:var(--accent);width:3px}
 body.resizing{cursor:col-resize;user-select:none}
 .panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px}
-.controls{position:sticky;top:14px}
+.controls{position:sticky;top:14px;max-height:calc(100vh - 28px);
+  overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable;
+  scrollbar-width:thin;scrollbar-color:var(--line) transparent}
+.controls::-webkit-scrollbar{width:10px}
+.controls::-webkit-scrollbar-track{background:transparent}
+.controls::-webkit-scrollbar-thumb{background:var(--line);border-radius:8px;
+  border:3px solid var(--panel)}
+.controls::-webkit-scrollbar-thumb:hover{background:#2c3e52}
 
 .field{margin-bottom:14px}
 .field>label{display:block;font-size:13px;color:var(--dim);margin-bottom:5px;font-weight:600}
@@ -78,4 +85,6 @@ button.primary:hover{filter:brightness(1.08)}
 footer{color:var(--dim);font-size:12.5px;padding:6px 24px 26px;max-width:1000px;line-height:1.6}
 footer code{color:#9fb4c9}
 
-@media(max-width:820px){main{grid-template-columns:1fr}.controls{position:static}.gutter{display:none}}
+@media(max-width:820px){main{grid-template-columns:1fr}
+  .controls{position:static;max-height:none;overflow:visible}
+  .gutter{display:none}}
